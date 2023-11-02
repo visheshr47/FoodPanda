@@ -12,6 +12,10 @@ import RestaurantMenu from "../src/components/RestaurantMenu";
 import Shimmer from "../src/components/Shimmer";
 //import Instamart from "../src/components/Instamart";
 
+
+// "build": "npx parcel public/index.html --dist-dir ./build",
+// "deploy": "gh-pages -d build"
+
 const Instamart = lazy(() => import("../src/components/Instamart"));
 const App = () => {
     return (
