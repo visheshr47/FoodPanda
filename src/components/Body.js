@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import CardBox from "./CardBox";
+import CardBox, { HigherOrderFunctionForOffer } from "./CardBox";
 import Shimmer from "./Shimmer";
 import useRestaurantList from "../utils/useRestaurantList";
+import UserContext from "../utils/UserContext";
 
 
 const Body = () => {
@@ -10,19 +11,31 @@ const Body = () => {
 
 
     //Custom Hook for this but didnt work
-    const restaurantName = useRestaurantList();
+
+    //restaurantame===restaurantname here i named a bit different because i can understand can use any name as it is only returned
+    const restaurantame = useRestaurantList();
     const [searchText, setSearchText] = useState("");
 
     const [allRestaurant, setAllRestaurant] = useState([]);
     const [filterDataRestaurant, setFilterDataRestaurant] = useState([]);
 
-    console.log(restaurantName);
+    console.log(restaurantame)
+
+    const { setUserName } = useContext(UserContext);
+
+
+
+    //Making for higher Order Function
+
+    const OfferLabel = HigherOrderFunctionForOffer(CardBox);
+
     useEffect(() => {
         //For Custom Hook
-        // Initialize allRestaurant and filterDataRestaurant when restaurantName changes
-        setAllRestaurant(restaurantName);
-        setFilterDataRestaurant(restaurantName);
-    }, [restaurantName]);
+        // Initialize allRestaurant and filterDataRestaurant when restaurantame changes as when both gets the value then only it will render here
+
+        setAllRestaurant(restaurantame);
+        setFilterDataRestaurant(restaurantame);
+    }, [restaurantame]);
 
     // useEffect(() => {
     //     //can put the async function here as well
@@ -52,7 +65,7 @@ const Body = () => {
         })
     }
 
-    console.log("render");
+
 
     return (allRestaurant?.length === 0) ? <Shimmer /> : (
         //(filterDataRestaurant.length === 0) ? <h1>No Data is Available</h1> : 
@@ -69,13 +82,23 @@ const Body = () => {
                 }
                 }>Search</button>
 
+                <label>UserName: </label>
+                <input placeholder="Enter Value To see change in UseContext" className="border" onChange={(e) => setUserName(e.target.value)}></input>
+
+
             </div >
             <div className=" grid grid-cols-4 grid-rows gap-y-6 justify-items-center         ">
                 {/* Here "restaurant" should need to be used inside map because same is used in body as prop to pass 
                     See since cardbord is imported here so that means the data which is using to map there is present here so thats why name needs to be same */}
                 {filterDataRestaurant.map((restaurant) => {
 
-                    return (<Link to={"/restaurant/" + restaurant.info.id} key={restaurant.info.id}><CardBox restaurant={restaurant} /></Link>)
+                    return (<Link
+                        to={"/restaurant/" + restaurant.info.id}
+                        key={restaurant.info.id}>
+                        {restaurant?.info?.aggregatedDiscountInfoV3?.header ? <OfferLabel resData={restaurant} /> : <CardBox resData={restaurant} />}
+
+                        {/* <CardBox resData={restaurant} /> */}
+                    </Link>)
                 })}
             </div >
         </div >)

@@ -17,7 +17,9 @@ import React from "react";
 
 {/* <div className={`relative w-10 h-5 m-10 rounded-full bg-white border border-solid border-black ${veg ? 'bg-green-600' : 'bg-white'}`} onClick={onToggle}> */ }
 
-const Switch = ({ veg, onToggle }) => {
+
+
+const Switch = (veg, onToggle) => {
 
     return (
         // <div className="relative w-10 h-5 m-10 rounded-full bg-white border border-solid border-black" onClick={onToggle}>
@@ -31,3 +33,40 @@ const Switch = ({ veg, onToggle }) => {
 
 }
 export default Switch;
+
+
+
+
+// Explaination of passing regular argument and object in a functional component
+
+
+// const useRestaurantMenu = (id) => {}
+// In this approach, you're passing the id as a regular argument to the functional component. It means that when you call this component, you pass the id directly, like this:
+
+// jsx
+// Copy code
+// useRestaurantMenu(123); // Here, 123 is the value of id
+// Inside the component, you can access id as a regular parameter, like so:
+
+// jsx
+// Copy code
+// const useRestaurantMenu = (id) => {
+//   // You can directly use the 'id' here
+//   console.log(id);
+// };
+// This is a straightforward and common way of passing a single value to a functional component.
+
+// const useRestaurantMenu = ({ id }) => {}
+// In this approach, you're passing an object with a destructured property as the argument to the functional component. When you call the component, you pass an object with the property id like this:
+
+// jsx
+// Copy code
+// useRestaurantMenu({ id: 123 }); // Here, { id: 123 } is the object passed
+// Inside the component, you need to destructure the id property from the object parameter, like so:
+
+// jsx
+// Copy code
+// const useRestaurantMenu = ({ id }) => {
+//   // You need to destructure 'id' from the object
+//   console.log(id);
+// };

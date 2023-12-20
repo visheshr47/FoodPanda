@@ -3,33 +3,23 @@ import { useParams } from "react-router-dom";
 import { IMG_CDN } from "../utils/config";
 import Shimmer from "./Shimmer";
 import Switch from "./Switch";
-import useRestaurantItem from "../utils/useRestaurantMenu";
+import useRestaurantMenu from "../utils/useRestaurantMenu";
+import RestaurantCategory from "./RestaurantCategory";
 
 const RestaurantMenu = () => {
     // const param = useParams();
     // const { id } = param;
     const { id } = useParams();
-    const menuItem = useRestaurantItem(id);
+    const menuItem = useRestaurantMenu(id);
+
+
+    const [showIndex, setShowIndex] = useState(null);
+
+    //console.log(menuItem);
 
 
 
-    //const [vegToggle, setVegToggle] = useState(true);
-    const [showVegOnly, setShowVegOnly] = useState(true);
-
-    // const [menuItem, setMenuItem] = useState(null);
-
-    // useEffect(() => {
-    //     getMenu()
-    // }, [])
-
-    // async function getMenu() {
-
-    //     const dataMenu = await fetch("https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.6371746&lng=77.2756181&restaurantId=" + id);
-    //     const jsonMenu = await dataMenu.json();
-
-
-    //     setMenuItem(jsonMenu.data);
-    // }
+    // const [showVegOnly, setShowVegOnly] = useState(true);
 
 
     if (menuItem === null) return <Shimmer />;
@@ -42,16 +32,33 @@ const RestaurantMenu = () => {
     // const { itemCards } = menuItem?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card.card;
 
 
-    console.log(menuItem);
+
+
+
+    const categories = menuItem?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter((c) => c.card?.card?.["@type"] === "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory");
+
+
+
+
+
+
+
+
 
     const { cuisines, locality } = menuItem?.cards[0]?.card?.card?.info;
     const { lastMileTravelString } = menuItem?.cards[0]?.card?.card?.info?.sla;
 
-    //const filteredVeg = itemCards.filter((item) => item.card?.info?.isVeg === 1);
 
-    const filteredItems = showVegOnly
-        ? itemCards
-        : itemCards.filter((item) => item.card?.info?.isVeg === 1);
+
+    //For Filter of Only Veg 
+
+    // const filteredItems = showVegOnly
+    //     ? itemCards
+    //     : itemCards.filter((item) => item.card?.info?.isVeg === 1);
+
+
+
+
 
     // return menuItem === null ? (<Shimmer />) : (
     return (
@@ -72,24 +79,49 @@ const RestaurantMenu = () => {
 
 
 
-            {/* <div className="flex justify-center">
-                <Switch />
-            </div> */}
 
-            <div className="flex justify-center">
-                <Switch veg={showVegOnly} onToggle={() => setShowVegOnly(!showVegOnly)} />
+
+
+            <div>
+
+                {/* controlled component */}
+                {categories.map((category, index) => (<RestaurantCategory
+                    restaurantCategories={category?.card?.card}
+                    dropCategory={index === showIndex ? true : false}
+                    setShowIndex={() => setShowIndex(index)}
+                    key={category.card.card.title} />))}
+
             </div>
+
+
+
+
+
+
+
+
+            {/* <div className="flex justify-center">
+                <Switch veg={showVegOnly} onToggle={() => setShowVegOnly(!showVegOnly)} />
+            </div> */}
 
             <hr />
 
 
 
+            {/* //With only data filter via veg and non veg
 
             <div className="min-h-[50vh]      ">
                 <ul className="grid grid-cols-2 grid-rows gap-y-6 justify-items-center text-sm hover:text-base pb-6   " >
                     {filteredItems.map((dish) => (<li className=" hover:text-lg " key={dish?.card?.info?.id}>{dish?.card?.info?.name}</li>))}
                 </ul>
-            </div >
+            </div > */}
+
+
+
+
+
+
+
 
 
 
@@ -115,5 +147,6 @@ const RestaurantMenu = () => {
 
         </>
     )
+
 }
 export default RestaurantMenu;

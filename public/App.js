@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 //import styles from "./styles.css";
 import Header from "../src/components/Heading";
@@ -10,6 +10,10 @@ import Error from "../src/components/Error";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import RestaurantMenu from "../src/components/RestaurantMenu";
 import Shimmer from "../src/components/Shimmer";
+import Cart from "../src/components/Cart.js";
+import { Provider } from "react-redux";
+import appStore from "../src/utils/appStore.js";
+import UserContext from "../src/utils/UserContext.js";
 //import Instamart from "../src/components/Instamart";
 
 
@@ -18,12 +22,29 @@ import Shimmer from "../src/components/Shimmer";
 
 const Instamart = lazy(() => import("../src/components/Instamart"));
 const App = () => {
+
+    const [userName, setUserName] = useState();
+
+    useEffect(() => {
+        const data = {
+            name: "Vishesh",
+        };
+        setUserName(data.name)
+    }, [])
+
     return (
-        <div className=" min-h-screen flex flex-col " >
-            <Header className="flex flex-col min-h-screen" />
-            <Outlet className="flex flex-col min-h-screen" />
-            <Footer className=" mt-auto   " />
-        </div >)
+        <Provider store={appStore}>
+            <UserContext.Provider value={{ loggedInUser: userName, setUserName }} >
+                <div className=" min-h-screen flex flex-col " >
+                    <UserContext.Provider value={{ loggedInUser: userName }} >
+                        <Header className="flex flex-col min-h-screen" />
+                    </UserContext.Provider>
+                    <Outlet className="flex flex-col min-h-screen" />
+                    <Footer className=" mt-auto   " />
+                </div >
+            </UserContext.Provider>
+
+        </Provider >)
 
 }
 const appRouter = createBrowserRouter([
@@ -55,6 +76,10 @@ const appRouter = createBrowserRouter([
                 // element: <Suspense fallback={<h1>Loading.....</h1>}><Instamart /></Suspense>
                 //Fallback is used for the time by between which it takes to load things
                 //Suspense tag is compulsory to load the lazy component
+            },
+            {
+                path: "/cart",
+                element: <Cart />
             }
         ]
     }

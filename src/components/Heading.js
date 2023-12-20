@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import Logo from "../utils/FoodPanda-Logo.png";
-
+import { useSelector } from "react-redux";
+import UserContext from "../utils/UserContext";
 
 //npx parcel public/index.html
 // const logAuthentication = () => {
@@ -13,6 +14,10 @@ import Logo from "../utils/FoodPanda-Logo.png";
 const Header = () => {
     const [loginToggle, setLoginToggle] = useState("Login");
     const onlineStatus2 = useOnlineStatus();
+    const cartItems = useSelector((store) => store.cart.items);
+    const { loggedInUser } = useContext(UserContext);
+
+
     return (<div className="flex justify-between bg-orange-100  shadow-lg     ">
         <img className="w-36 h-16 object-contain ml-3   " src={Logo} alt="Logo of Food App" />
         <div className="items-center">
@@ -21,8 +26,8 @@ const Header = () => {
                 <li className="px-3 hover:text-lg "><Link to="/about">About</Link></li>
                 <li className="px-3 hover:text-lg "><Link to="/contact">Help</Link></li>
                 <li className="px-3 hover:text-lg"><Link to="/instamart">Instamart</Link></li>
-                <li className="px-3 hover:text-lg ">Cart</li>
-
+                <li className="px-3 hover:text-lg "><Link to="/cart">Cart{cartItems.length}</Link> </li>
+                <li className="px-3 hover:text-lg font-bold ">{loggedInUser}</li>
 
 
                 {/* {loginToggle ? <button onClick={() => setLoginToggle(false)}>Login</button> : <button onClick={() => setLoginToggle(true)}>LogOut</button>} */}
